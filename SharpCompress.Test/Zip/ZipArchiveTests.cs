@@ -184,6 +184,25 @@ namespace SharpCompress.Test
         }
 
         [TestMethod]
+        public void ExtractWithPasswordAndEmptyFiles()
+        {
+            string archivePath = Path.Combine(TEST_ARCHIVES_PATH, "ZipWithEmptyFiles.zip");
+            const string password = "myPassword";
+
+            using (var archive = ZipArchive.Open(archivePath, password))
+            {
+                archive.WriteToDirectory(SCRATCH_FILES_PATH,
+                    ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+            }
+
+            var file = new FileInfo(Path.Combine(SCRATCH_FILES_PATH, "dummy", "empty.txt"));
+            Assert.IsTrue(file.Exists);
+            Assert.AreEqual(0, file.Length);
+
+            Directory.Delete(SCRATCH_FILES_PATH, true);
+        }
+
+        [TestMethod]
         public void Zip_Removal_Poly()
         {
             ResetScratch();

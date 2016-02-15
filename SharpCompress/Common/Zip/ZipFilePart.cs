@@ -133,16 +133,10 @@ namespace SharpCompress.Common.Zip
 
         protected Stream GetCryptoStream(Stream plainStream)
         {
-            if ((Header.CompressedSize == 0)
-#if !PORTABLE && !NETFX_CORE
- && ((Header.PkwareTraditionalEncryptionData != null)
-                    || (Header.WinzipAesEncryptionData != null)))
-#else 
-                && (Header.PkwareTraditionalEncryptionData != null))
-#endif
-            {
-                throw new NotSupportedException("Cannot encrypt file with unknown size at start.");
-            }
+            // [oklemencic], 15th Feb 2016:
+            // Previuosly there was a check that encryption did not work with Header.CompressedSize == 0
+            // throw new NotSupportedException("Cannot encrypt file with unknown size at start.");
+
             if ((Header.CompressedSize == 0)
                 && FlagUtility.HasFlag(Header.Flags, HeaderFlags.UsePostDataDescriptor))
             {
